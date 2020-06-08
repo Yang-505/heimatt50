@@ -4,12 +4,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
+  state: { // 管理状态
   },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
+  mutations: { // 修改状态
   }
 })
