@@ -29,8 +29,9 @@
 
 <script>
 // 导入 axios
-import axios from 'axios'
+import { apiLogin } from '../../api/user.js'
 export default {
+  name: 'Login',
   data () {
     return {
       user: {
@@ -40,22 +41,38 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
-      // 1.0 准备接口所需的参数： mobile, code => user 中得到
-      // 2.0 请求服务器的接口：登录注册（使用 axios）
-      axios({
-        url: 'http://ttapi.research.itcast.cn/app/v1_0/authorizations',
-        method: 'POST',
-        data: {
-          mobile: this.user.phone,
-          code: this.user.code
-        }
-      }).then(res => {
-        // 3.0 接口服务器返回的数据
-        console.log(res.data) // { 'token': '', 'refresh_token': ''}
-        // 4.0 进行后续的逻辑处理
-        this.$router.push('/home')
+    // 直接导入
+    // onSubmit () {
+    //   // 1.0 准备接口所需的参数： mobile, code => user 中得到
+    //   // 2.0 请求服务器的接口：登录注册（使用 axios）
+    //   axios({
+    //     url: 'http://ttapi.research.itcast.cn/app/v1_0/authorizations',
+    //     method: 'POST',
+    //     data: {
+    //       mobile: this.user.phone,
+    //       code: this.user.code
+    //     }
+    //   }).then(res => {
+    //     // 3.0 接口服务器返回的数据
+    //     console.log(res.data) // { 'token': '', 'refresh_token': ''}
+    //     // 4.0 进行后续的逻辑处理
+    //     this.$router.push('/home')
+    //   })
+    // }
+    // console.log(---------------------------------------------------------------------------);
+    async onSubmit () {
+      // 登录
+      const res = await apiLogin({
+        mobile: this.user.phone,
+        code: this.user.code
       })
+      console.log(res.data)
+      // 登录成功之后要将用户信息保存起来 token & refresh_token
+      // 保存到vuex 中
+      this.$store.commit('setUserInfo', res.data.data)
+      console.log(this.$store.state.userInfo)
+      // 保存到 localstorage 中
+      window.localStorage.setItem('userInfo', JSON.stringify(res.data.data))
     }
   }
 }
