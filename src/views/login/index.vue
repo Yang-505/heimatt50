@@ -5,7 +5,7 @@
         <!-- 手机号&验证码输入框 -->
         <van-form @submit="onSubmit">
             <van-cell-group>
-                <van-field :rules="[{ required: true, message: '请填写手机号' }]" v-model="user.phone" placeholder="请输入手机号">
+                <van-field :rules="[{ required: true, message: '请填写手机号',  }]" v-model="user.phone" placeholder="请输入手机号">
                     <template #left-icon>
                         <span class="iconfont icon-phone1"></span>
                     </template>
@@ -21,7 +21,7 @@
             </van-cell-group>
             <!-- 登录按钮 -->
             <div class="loginBtn">
-                <van-button type="info" size="large">登录</van-button>
+                <van-button :loading="isloading" type="info" size="large">登录</van-button>
             </div>
         </van-form>
     </div>
@@ -30,6 +30,7 @@
 <script>
 // 导入 axios
 import { apiLogin } from '../../api/user.js'
+import { localSet } from '@/utils/mylocal.js'
 export default {
   name: 'Login',
   data () {
@@ -37,7 +38,9 @@ export default {
       user: {
         phone: '13911111111',
         code: '246810'
-      }
+      },
+      // 默认动画为false
+      isloading: false
     }
   },
   methods: {
@@ -61,18 +64,36 @@ export default {
     // }
     // console.log(---------------------------------------------------------------------------);
     async onSubmit () {
-      // 登录
-      const res = await apiLogin({
-        mobile: this.user.phone,
-        code: this.user.code
-      })
-      console.log(res.data)
-      // 登录成功之后要将用户信息保存起来 token & refresh_token
-      // 保存到vuex 中
-      this.$store.commit('setUserInfo', res.data.data)
-      console.log(this.$store.state.userInfo)
-      // 保存到 localstorage 中
-      window.localStorage.setItem('userInfo', JSON.stringify(res.data.data))
+      // 进入时判断 isloading 是否为false
+      if (this.isloading === false) {
+      // 将加载状态设置为 true
+        this.isloading = true
+        // 登录
+        try {
+          const res = await apiLogin({
+            mobile: this.user.phone,
+            code: this.user.code
+          })
+          // 当请求结束后改为 false
+          this.isloading = false
+          console.log(res.data)
+          // 登录成功之后要将用户信息保存起来 token & refresh_token
+          // 保存到vuex 中
+          this.$store.commit('setUserInfo', res.data.data)
+          console.log(this.$store.state.userInfo)
+          // 保存到 localstorage 中
+          //   window.localStorage.setItem('userInfo', JSON.stringify(res.data.data))
+          localSet('userInfo', res.data.data)
+          // 跳转到 首页
+          this.$router.push('/home')
+        } catch (error) {
+          console.log('错误了')
+          // 错误之后将isloading设置为false
+          this.isloading = false
+          // 添加一个失败的提示
+          this.$toast.fail('手机号或者验证码错误,请重新输入')
+        }
+      }
     }
   }
 }
