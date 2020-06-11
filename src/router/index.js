@@ -8,7 +8,7 @@ import Login from '../views/login/index.vue'
 import Home from '../views/home/index.vue'
 // 导入首页 & 我的
 import Index from '../views/index/index.vue'
-import My from '../views/my/index.vue'
+import My from '@/views/my/index.vue'
 Vue.use(VueRouter)
 
 const routes = [
