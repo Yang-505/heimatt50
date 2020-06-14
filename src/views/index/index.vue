@@ -12,20 +12,44 @@
               v-model="item.loading"
               :finished="item.finished"
               finished-text="没有更多了"
-              @load="onLoad"
-            >
+              @load="onLoad">
             {{ active }}
-            <van-cell class="mycell" v-for="(subitem, subindex) in item.articleList" :key="subindex" :title="subitem.title" />
+            <van-cell class="mycell" v-for="(subitem, subindex) in item.articleList" :key="subindex" :title="subitem.title">
+              <!-- 标题 -->
+              <template #title>
+                <h4>{{subitem.title}}</h4>
+              <!-- 图片 -->
+              <van-grid v-if="subitem.cover.type !==0" :border="false" :column-num="3">
+                <van-grid-item v-for="(imgitem,imgindex) in subitem.cover.images" :key="imgindex">
+                  <van-image lazy-load :src="imgitem" />
+                </van-grid-item>
+              </van-grid>
+              <!-- 其他信息 -->
+              <div class="msgbox">
+                <div class="left">
+                  <span>{{subitem.aut_name}}</span>
+                  <span>{{subitem.comm_count}}评论</span>
+                  <span>{{subitem.pubdate | timefilter}}</span>
+                </div>
+                <div class="right">
+                  <van-icon @click="openMore(subitem)" name="cross" />
+                </div>
+              </div>
+              </template>
+            </van-cell>
           </van-list>
        </van-pull-refresh>
       </van-tab>
     </van-tabs>
     <!-- 操作按钮 -->
-    <div class="process" @click="showChannel">
-      <van-icon name="bars"/>
+    <div class="process" @click="showChannel()">
+      <van-icon name="bars" />
     </div>
     <!-- 弹出层子组件 -->
-    <clannel :show="show" :channelList="channelList"/>
+    <!-- <clannel :show="show" @update:active="v=>active=v" :active="active" :channelList="channelList"/> -->
+      <clannel :show="show"  :active.sync="active" :channelList="channelList"/>
+    <!-- 更多面板 -->
+    <more ref="more" @delArt="delArt" :artid="artid" />
   </div>
 </template>
 
@@ -38,10 +62,13 @@ import { localGet } from '../../utils/mylocal.js'
 import { apiGetArticleList } from '../../api/article.js'
 // 导入 子组件
 import clannel from './com/clannel.vue'
+// 导入更多操作组件
+import more from './com/more.vue'
 export default {
   // 注册
   components: {
-    clannel
+    clannel,
+    more
   },
   data () {
     return {
@@ -50,7 +77,9 @@ export default {
       // 选中的 tab 的下标
       active: 0,
       // 控制弹出层
-      show: false
+      show: false,
+      // 记录当前点击数据的 id
+      artid: 0
     }
   },
   methods: {
@@ -95,6 +124,8 @@ export default {
         if (token) {
           // 1.0 如果登录：直接从服务器中得到当前用户的频道数据
           const res = await apiGetChannel()
+          console.log(res)
+          console.log(1111)
           this.channelList = res.data.data.channels
         } else {
           // 2.0 如果没有登录：
@@ -138,8 +169,29 @@ export default {
     // 弹出层
     showChannel () {
       this.show = true
-    }
+    },
 
+    // 打开更多面板
+    openMore (item) {
+      this.$refs.more.show = true
+      // 记录文章的 id
+      this.artid = item.art_id
+    },
+
+    // 删除不感兴趣的文章
+    delArt (artid) {
+      console.log(artid)
+      // 得到当前选中的频道数据
+      const currentChannel = this.channelList[this.active]
+      // 遍历并删除
+      currentChannel.articleList.forEach((item, index) => {
+        // 判断 item 的 id 与 artid 是否相同
+        if (item.art_id === artid) {
+          // 将文章数据删除
+          currentChannel.articleList.splice(index, 1)
+        }
+      })
+    }
   },
 
   mounted () {
@@ -168,18 +220,36 @@ export default {
   }
   .process {
     position: fixed;
-    top: 46px;
     right: 0px;
+    top: 46px;
     z-index: 1000;
     width: 10%;
     height: 44px;
-    background-color: #1e1e1e;
     text-align: center;
     line-height: 44px;
-    font-size: 20px;
+    font-size: 30px;
   }
   .mycell{
     height: 100%;
+  }
+  .msgbox {
+    display: flex;
+    // justify-content: space-between;
+    // justify-content: space-between;
+    justify-content: space-between;
+    .left {
+      color: #999;
+      span {
+        margin-right: 10px;
+      }
+    }
+    .right {
+      border: 1px solid #ccc;
+      width: 24px;
+      height: 15px;
+      text-align: center;
+      line-height: 15px;
+    }
   }
 }
 </style>

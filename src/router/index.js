@@ -13,6 +13,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    // 路由重定向
+    path: '/',
+    redirect: '/login',
+    component: Login
+  },
+  {
     path: '/uservant',
     component: Uservant
   },
