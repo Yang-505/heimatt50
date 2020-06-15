@@ -3,11 +3,23 @@
 import axios from 'axios'
 // 导入 store
 import store from '../store/index.js'
+// 导入 json-bigint
+import JSONBig from 'json-bigint'
 // 2 创建一个axios实例
 const http = axios.create({
   // 设置一个基地址
-  baseURL: 'http://ttapi.research.itcast.cn'
+  baseURL: 'http://ttapi.research.itcast.cn',
   // axrfCookieName: 这个千万不要添加这个属性.否则会报跨域的错误(之前黑马面面中的服务器响应在请求中携带cookie,但是黑马头条不需要)
+  // 允许我们在处理返回数据之前,操作返回的数据
+  // 响应预处理函数
+  transformResponse: [function (data) {
+    try {
+      // data: 从服务器返回回来的 json 格式的
+      return JSONBig.parse(data)
+    } catch (error) {
+      return JSON.parse(data)
+    }
+  }]
 })
 
 // 3. 给axios 添加拦截器

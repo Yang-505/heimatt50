@@ -1,12 +1,17 @@
 <template>
   <div class="more">
       <van-popup class="morepop" v-model="show">
-        <van-cell-group>
+        <van-cell-group v-if="isReport === false">
             <van-cell @click="dislike()" icon="failure" title="不感兴趣"></van-cell>
-            <van-cell icon="warn-o" class="mycell" is-link title="反馈垃圾内容"></van-cell>
+            <van-cell @click="isReport=true" icon="warn-o" class="mycell" is-link title="反馈垃圾内容"></van-cell>
             <van-cell icon="delete" title="拉黑作者"></van-cell>
         </van-cell-group>
-        {{ artid }}
+        <!-- {{ artid }} -->
+        <!-- 反馈垃圾信息 -->
+        <van-cell-group v-else>
+          <van-cell @click="isReport=false" icon="arrow-left" />
+          <van-cell v-for="(item, index) in report" :key="index" :title="item.type" />
+        </van-cell-group>
       </van-popup>
   </div>
 </template>
@@ -19,7 +24,21 @@ export default {
   props: ['artid'],
   data () {
     return {
-      show: false
+      show: false,
+      // 举报类别
+      report: [
+        { id: 0, type: '其他问题' },
+        { id: 1, type: '标题夸张' },
+        { id: 2, type: '低俗色情' },
+        { id: 3, type: '错别字多' },
+        { id: 4, type: '旧闻重复' },
+        { id: 5, type: '广告软文' },
+        { id: 6, type: '内容不实' },
+        { id: 7, type: '涉嫌违法犯罪' },
+        { id: 8, type: '侵权' }
+      ],
+      // 是否显示举报详情
+      isReport: false
     }
   },
   methods: {
