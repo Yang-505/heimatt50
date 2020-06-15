@@ -24,3 +24,27 @@ export function apiDisList (artid) {
     }
   })
 }
+
+// 举报文章
+export function apiReport ({ artid, type }) {
+  return myhttp({
+    url: '/app/v1_0/article/reports',
+    method: 'POST',
+    data: {
+      target: artid,
+      type: type,
+      remark: ''
+    }
+  })
+}
+
+// 拉黑作者
+export function apiDel (artid) {
+  return myhttp({
+    url: '/app/v1_0/user/blacklists',
+    method: 'POST',
+    data: {
+      target: artid
+    }
+  })
+}

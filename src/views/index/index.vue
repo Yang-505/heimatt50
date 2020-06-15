@@ -50,7 +50,7 @@
     <!-- <clannel :show="show" @update:active="v=>active=v" :active="active" :channelList="channelList"/> -->
       <clannel :show="show"  :active.sync="active" :channelList="channelList"/>
     <!-- 更多面板 -->
-    <more ref="more" @delArt="delArt" :artid="artid" />
+    <more ref="more" @delArt="delArt" @dele="dele" :artid="artid" />
   </div>
 </template>
 
@@ -104,6 +104,7 @@ export default {
       }
     },
 
+    // 下拉刷新
     onRefresh () {
       // console.log('refresh')
       // 得到当前有频道
@@ -143,11 +144,15 @@ export default {
         }
       } catch (err) {
         console.log('哎呀，出错啦！')
+        // 用户过期跳转到登录页面
+        this.$toast.fail('账号过期自动跳转到登录页面')
+        this.$router.push('/login')
       }
       // 添加额外属性
       this.addOtherPropToList()
     },
 
+    // 额外属性
     addOtherPropToList () {
       // 遍历频道列表，
       this.channelList.forEach(item => {
@@ -189,6 +194,23 @@ export default {
         // 判断 item 的 id 与 artid 是否相同
         if (item.art_id === artid) {
           // 将文章数据删除
+          currentChannel.articleList.splice(index, 1)
+        }
+      })
+    },
+
+    // 拉黑作者
+    dele (artid) {
+      console.log(artid)
+      // console.log(artid)
+      // 得到当前选中的频道数据
+      const currentChannel = this.channelList[this.active]
+      // console.log(currentChannel)
+      // 遍历并拉黑
+      currentChannel.articleList.forEach((item, index) => {
+        // 判断 item 和 id 与 artid 是否相同
+        if (item.art_id === artid) {
+          // 将文章数据拉黑
           currentChannel.articleList.splice(index, 1)
         }
       })

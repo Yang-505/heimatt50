@@ -9,6 +9,10 @@ import Home from '../views/home/index.vue'
 // 导入首页 & 我的
 import Index from '../views/index/index.vue'
 import My from '@/views/my/index.vue'
+// 导入搜索
+import Search from '../views/search/index.vue'
+// 导入搜索结果
+import SearchResult from '../views/searchResult/searchResult.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -38,8 +42,17 @@ const routes = [
       {
         path: '/my',
         component: My
+      },
+      {
+        path: '/search',
+        component: Search
       }
     ]
+  },
+  // 搜索结果
+  {
+    path: '/searchResult/:key',
+    component: SearchResult
   }
 ]
 

@@ -157,6 +157,7 @@ export default {
     }
   },
 
+  // 计算属性钩子函数
   computed: {
     // 推荐频道
     newChannel () {

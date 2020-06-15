@@ -1,16 +1,16 @@
 <template>
   <div class="more">
-      <van-popup class="morepop" v-model="show">
+      <van-popup class="morepop" v-model="show" @close="close">
         <van-cell-group v-if="isReport === false">
             <van-cell @click="dislike()" icon="failure" title="不感兴趣"></van-cell>
             <van-cell @click="isReport=true" icon="warn-o" class="mycell" is-link title="反馈垃圾内容"></van-cell>
-            <van-cell icon="delete" title="拉黑作者"></van-cell>
+            <van-cell @click="del()" icon="delete" title="拉黑作者"></van-cell>
         </van-cell-group>
         <!-- {{ artid }} -->
         <!-- 反馈垃圾信息 -->
         <van-cell-group v-else>
           <van-cell @click="isReport=false" icon="arrow-left" />
-          <van-cell v-for="(item, index) in report" :key="index" :title="item.type" />
+          <van-cell @click="reportfn(item.id)" v-for="(item, index) in report" :key="index" :title="item.type" />
         </van-cell-group>
       </van-popup>
   </div>
@@ -18,7 +18,9 @@
 
 <script>
 // 导入操作文章的接口 apiDisList
-import { apiDisList } from '../../../api/article'
+import { apiDisList, apiReport } from '../../../api/article'
+// 导入获取数据
+// import { localGet } from '../../../utils/mylocal'
 export default {
   // artid: 当前点击的文章 id
   props: ['artid'],
@@ -59,6 +61,39 @@ export default {
       }
       // 关闭面板
       this.show = false
+    },
+    // 举报文章
+    async reportfn (typeid) {
+      try {
+        // 请求服务器
+        await apiReport({
+          artid: this.artid,
+          type: typeid
+        })
+        // 提示举报成功
+        this.$toast.success('举报成功')
+      } catch (error) {
+        // 提示错误
+        this.$toast.fail('数据异常')
+      }
+      // 关闭面板
+      this.show = false
+      // 关闭显示举报详情
+      this.isReport = false
+    },
+    // 返回更多操作中
+    close () {
+      this.isReport = false
+    },
+    // 拉黑作者
+    del () {
+      const token = this.$store.state.userInfo.token
+      console.log(token)
+      if (token) {
+        this.$emit('dele', this.artid)
+        // 关闭面板
+        this.show = false
+      }
     }
   }
 }
