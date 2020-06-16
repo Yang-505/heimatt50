@@ -13,6 +13,16 @@ export function apiLogin ({ mobile, code }) {
   })
 }
 
+// 拉黑作者
+export function apiDel (autid) {
+  return myhttp({
+    url: '/app/v1_0/user/blacklists',
+    method: 'POST',
+    data: {
+      target: autid
+    }
+  })
+}
 // export {
 //   apiLogin
 // }

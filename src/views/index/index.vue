@@ -28,9 +28,9 @@
               <!-- 其他信息 -->
               <div class="msgbox">
                 <div class="left">
-                  <span>{{subitem.aut_name}}</span>
-                  <span>{{subitem.comm_count}}评论</span>
-                  <span>{{subitem.pubdate | timefilter}}</span>
+                  <span>{{ subitem.aut_name }}</span>
+                  <span>{{ subitem.comm_count }}评论</span>
+                  <span>{{ subitem.pubdate | timefilter}}</span>
                 </div>
                 <div class="right">
                   <van-icon @click="openMore(subitem)" name="cross" />
@@ -50,7 +50,7 @@
     <!-- <clannel :show="show" @update:active="v=>active=v" :active="active" :channelList="channelList"/> -->
       <clannel :show="show"  :active.sync="active" :channelList="channelList"/>
     <!-- 更多面板 -->
-    <more ref="more" @delArt="delArt" @dele="dele" :artid="artid" />
+    <more ref="more" @delArt="delArt" @artid="artid" :autid="autid" />
   </div>
 </template>
 
@@ -80,7 +80,9 @@ export default {
       // 控制弹出层
       show: false,
       // 记录当前点击数据的 id
-      artid: 0
+      artid: 0,
+      // 记录当前数据的作者id
+      autid: 0
     }
   },
   methods: {
@@ -182,6 +184,8 @@ export default {
       this.$refs.more.show = true
       // 记录文章的 id
       this.artid = item.art_id
+      // 记录作者 id
+      this.autid = item.aut_id
     },
 
     // 删除不感兴趣的文章
@@ -194,23 +198,6 @@ export default {
         // 判断 item 的 id 与 artid 是否相同
         if (item.art_id === artid) {
           // 将文章数据删除
-          currentChannel.articleList.splice(index, 1)
-        }
-      })
-    },
-
-    // 拉黑作者
-    dele (artid) {
-      console.log(artid)
-      // console.log(artid)
-      // 得到当前选中的频道数据
-      const currentChannel = this.channelList[this.active]
-      // console.log(currentChannel)
-      // 遍历并拉黑
-      currentChannel.articleList.forEach((item, index) => {
-        // 判断 item 和 id 与 artid 是否相同
-        if (item.art_id === artid) {
-          // 将文章数据拉黑
           currentChannel.articleList.splice(index, 1)
         }
       })

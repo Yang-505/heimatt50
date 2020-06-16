@@ -5,6 +5,7 @@
             <van-cell @click="dislike()" icon="failure" title="不感兴趣"></van-cell>
             <van-cell @click="isReport=true" icon="warn-o" class="mycell" is-link title="反馈垃圾内容"></van-cell>
             <van-cell @click="del()" icon="delete" title="拉黑作者"></van-cell>
+        {{artid}}
         </van-cell-group>
         <!-- {{ artid }} -->
         <!-- 反馈垃圾信息 -->
@@ -12,18 +13,19 @@
           <van-cell @click="isReport=false" icon="arrow-left" />
           <van-cell @click="reportfn(item.id)" v-for="(item, index) in report" :key="index" :title="item.type" />
         </van-cell-group>
+        {{ artid }}
       </van-popup>
   </div>
 </template>
 
 <script>
 // 导入操作文章的接口 apiDisList
-import { apiDisList, apiReport } from '../../../api/article'
-// 导入获取数据
-// import { localGet } from '../../../utils/mylocal'
+import { apiDisList, apiReport } from '../../../api/article.js'
+// 导入拉黑的方法
+import { apiDel } from '../../../api/user'
 export default {
   // artid: 当前点击的文章 id
-  props: ['artid'],
+  props: ['artid', 'autid'],
   data () {
     return {
       show: false,
@@ -48,6 +50,7 @@ export default {
     async dislike () {
       // 判断用户是否登录
       const token = this.$store.state.userInfo.token
+      console.log(token)
       if (token) {
         // 1. 将当前文章数据从页面上删除
         // 1.1 将当前文章数据传回父组件
@@ -86,14 +89,17 @@ export default {
       this.isReport = false
     },
     // 拉黑作者
-    del () {
-      const token = this.$store.state.userInfo.token
-      console.log(token)
-      if (token) {
-        this.$emit('dele', this.artid)
-        // 关闭面板
-        this.show = false
+    async del () {
+      try {
+        // 拉黑作者
+        await apiDel(this.autid)
+        // 提示成功
+        this.$toast.success('拉黑作者成功,请刷新')
+      } catch (err) {
+        this.$toast.fail(err.message)
       }
+      // 关闭面板
+      this.show = false
     }
   }
 }

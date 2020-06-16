@@ -37,14 +37,3 @@ export function apiReport ({ artid, type }) {
     }
   })
 }
-
-// 拉黑作者
-export function apiDel (artid) {
-  return myhttp({
-    url: '/app/v1_0/user/blacklists',
-    method: 'POST',
-    data: {
-      target: artid
-    }
-  })
-}

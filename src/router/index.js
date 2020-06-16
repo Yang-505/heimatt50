@@ -60,4 +60,11 @@ const router = new VueRouter({
   routes
 })
 
+// 将 VueRouterPush 中的 push 保存起来
+const VueRouterPush = VueRouter.prototype.push
+// 重新给 vuerouter 中的 push 赋值
+
+VueRouter.prototype.push = function (to) {
+  return VueRouterPush.call(this, to).catch(err => err)
+}
 export default router

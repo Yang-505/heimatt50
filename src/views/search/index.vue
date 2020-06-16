@@ -15,12 +15,12 @@
     <van-cell-group v-else>
       <van-cell title="历史区域">
         <template #default>
-          <van-icon name="delete"></van-icon>
+          <van-icon @click="delArr()" name="delete"></van-icon>
         </template>
       </van-cell>
       <van-cell @click="onSearch(item)" v-for="(item, index) in historyList" :key="index" icon="search" :title="item" >
         <template #default>
-          <van-icon @click="del.stop()" name="cross"></van-icon>
+          <van-icon name="cross"></van-icon>
         </template>
       </van-cell>
     </van-cell-group>
@@ -31,7 +31,7 @@
 // 导入联想方法
 import { apiThink } from '../../api/utils'
 // 导入储存数据, 获取数据
-import { localSet, localGet } from '../../utils/mylocal'
+import { localSet, localGet, removeLoacl } from '../../utils/mylocal'
 export default {
   data () {
     return {
@@ -59,8 +59,10 @@ export default {
     // 历史搜索
     historySearch (key) {
       this.$router.push(`/searchResult/${key}`)
-      this.historyList.push(key)
+      this.historyList.unshift(key)
       localSet('history', this.historyList)
+      // 数组的去重
+      this.historyList = [...new Set(this.historyList)]
     },
     // 点击取消时触发
     onCancel () {
@@ -92,10 +94,28 @@ export default {
         })
         console.log(this.thinkResult)
       }, 300)
+    },
+    // 清除历史记录
+    delArr () {
+      // 询问用户是否删除所有历史数据
+      this.$dialog.confirm({
+        title: '提示',
+        message: '是否删除所有历史数据'
+      }).then(() => {
+      // 清除搜索历史
+        this.historyList = []
+        removeLoacl('history')
+      }).catch(() => {
+      // on cancel
+        console.log('取消')
+      })
     }
-  },
+  }
   // 删除历史数据
-  del () {}
+  // del (index) {
+  //   this.historyList.splice(index, 1)
+  //   localSet('history', this.historyList)
+  // },
 }
 </script>
 

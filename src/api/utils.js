@@ -11,3 +11,15 @@ export function apiThink (key) {
     }
   })
 }
+
+// 封装方法: 得到文章数据
+export function apiGetArticle ({ page, perpage, q }) {
+  return myhttp({
+    url: '/app/v1_0/search',
+    params: {
+      page: page,
+      per_page: perpage,
+      q: q
+    }
+  })
+}
