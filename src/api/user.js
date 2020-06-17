@@ -23,6 +23,22 @@ export function apiDel (autid) {
     }
   })
 }
-// export {
-//   apiLogin
-// }
+
+// 关注作者
+export function apiFollow (autid) {
+  return myhttp({
+    url: '/app/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target: autid
+    }
+  })
+}
+
+// 取关作者
+export function apiUnFollow (autid) {
+  return myhttp({
+    url: `/app/v1_0/user/followings/${autid}`,
+    method: 'DELETE'
+  })
+}

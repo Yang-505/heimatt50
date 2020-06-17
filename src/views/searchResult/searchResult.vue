@@ -5,7 +5,7 @@
     {{key}}
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
       <div v-for="(item, index) in resultList" :key="index">
-        <van-cell>
+        <van-cell @click="$router.push('/detail/' + item.art_id)">
           <template #title>
             <!-- 标题 -->
             <h4>{{item.title}}</h4>
@@ -26,9 +26,9 @@
           </template>
         </van-cell>
         <van-grid direction="horizontal" :column-num="3">
-          <van-grid-item icon="comment-o" @click="commet()" text="62" />
+          <van-grid-item icon="comment-o" @click="commet()" :text="item.comm_count + ''" />
           <van-grid-item icon="like-o" @click="zan()" text="点赞" />
-          <van-grid-item icon="exchange" text="分享" />
+          <van-grid-item icon="exchange" @click="share()" text="分享" />
         </van-grid>
       </div>
     </van-list>
@@ -38,6 +38,8 @@
 <script>
 // 导入
 import { apiGetArticle } from '../../api/utils'
+// 导入对文章点赞方法
+// import { apiSearchZan } from '../../api/article'
 export default {
   data () {
     return {
@@ -49,7 +51,8 @@ export default {
       page: 1,
       perpage: 10,
       // 保存数据
-      resultList: []
+      resultList: [],
+      artid: 0
     }
   },
   // 方法
@@ -86,12 +89,24 @@ export default {
       }
     },
     // 点赞
-    zan () {
+    async zan () {
       // 已登录会返回true,未登录会返回 false
       if (!this.$login()) {
         return // 中断后续代码的执行
       }
-      console.log('点赞功能')
+      console.log(this.resultList)
+      // console.log(this.detail.end_id)
+      // const res = await apiSearchZan(this.artid)
+      // console.log(res)
+    },
+    // 分享
+    share () {
+      // 已经登录会返回true,未登录会返回 false
+      if (!this.$login()) {
+
+      } else {
+        console.log('分享功能')
+      }
     }
   },
   // 钩子函数

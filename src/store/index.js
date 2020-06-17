@@ -2,11 +2,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 // 导入操作 local 的方法
 import { localGet } from '../utils/mylocal.js'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: { // 管理状态
-    // 在打开项目是应该从 localstorage 中 取出来 userInfo
+    // 在打开项目时应该从 localstorage 中取出来 userInfo
     userInfo: localGet('userInfo') || {}
   },
   mutations: { // 修改状态

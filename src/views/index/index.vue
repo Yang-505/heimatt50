@@ -50,7 +50,7 @@
     <!-- <clannel :show="show" @update:active="v=>active=v" :active="active" :channelList="channelList"/> -->
       <clannel :show="show"  :active.sync="active" :channelList="channelList"/>
     <!-- 更多面板 -->
-    <more ref="more" @delArt="delArt" @artid="artid" :autid="autid" />
+    <more ref="more" @delArt="delArt" :artid="artid" :autid="autid" />
   </div>
 </template>
 
@@ -186,6 +186,7 @@ export default {
       this.artid = item.art_id
       // 记录作者 id
       this.autid = item.aut_id
+      console.log(item)
     },
 
     // 删除不感兴趣的文章

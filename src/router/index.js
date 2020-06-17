@@ -13,6 +13,8 @@ import My from '@/views/my/index.vue'
 import Search from '../views/search/index.vue'
 // 导入搜索结果
 import SearchResult from '../views/searchResult/searchResult.vue'
+// 导入详情
+import Detail from '../views/detail/index.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -29,6 +31,11 @@ const routes = [
   {
     // 添加一个登录组件
     path: '/login',
+    component: Login
+  },
+  {
+    // 添加一个路由 checklogin
+    path: '/checklogin',
     component: Login
   },
   {
@@ -53,6 +60,11 @@ const routes = [
   {
     path: '/searchResult/:key',
     component: SearchResult
+  },
+  // 详情
+  {
+    path: '/detail/:artid',
+    component: Detail
   }
 ]
 

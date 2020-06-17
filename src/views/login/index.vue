@@ -62,7 +62,7 @@ export default {
           console.log('用户登录成功~~~~')
           // 将加载状态设置为 false
           this.isLoading = false
-          console.log(res.data)
+          // console.log(res.data)
           // 登录成功之后要将用户信息保存起来: token & refresh_token
           // 保存到 vuex 中
           this.$store.commit('setUserInfo', res.data.data)
@@ -70,16 +70,23 @@ export default {
           // this.$notify({ type: 'success', message: '登录成功！' })
           // 保存到 vuex 中
           localSet('userInfo', res.data.data)
-          // 跳转到首页
-          this.$router.push('/index')
+          // 得到当前页面路由
+          // 判断当前页面的路由
+          // console.log(this.$route.path)
+          if (this.$route.path === '/login') {
+            this.$router.push('/home')
+          } else {
+            // 回退上一个页面
+            this.$router.back()
+          }
         } catch (error) {
-          console.log('用户登录失败了')
+          console.log(error)
           // 将加载状态设置为 false
           this.isLoading = false
           // 添加一个失败的提示
           this.$toast.fail('手机号或者验证码错误,请重新输入')
           // 跳转到登录页面
-          this.$router.push('/login')
+          // this.$router.push('/login')
         }
       }
     }

@@ -25,6 +25,14 @@ export function apiDisList (artid) {
   })
 }
 
+// 封装一个对文章取消标记不喜欢
+export function apiNoList (artid) {
+  return myhttp({
+    url: `/app/v1_0/article/dislikes/${artid}`,
+    method: 'DELETE'
+  })
+}
+
 // 举报文章
 export function apiReport ({ artid, type }) {
   return myhttp({
@@ -34,6 +42,44 @@ export function apiReport ({ artid, type }) {
       target: artid,
       type: type,
       remark: ''
+    }
+  })
+}
+
+// 封装方法; 得到文章详情
+export function apiGetDetail (artid) {
+  return myhttp({
+    url: `/app/v1_0/articles/${artid}`,
+    method: 'GET'
+  })
+}
+
+// 封裝方法: 對文章點讚
+export function apiZan (artid) {
+  return myhttp({
+    url: '/app/v1_0/article/likings',
+    method: 'POST',
+    data: {
+      target: artid
+    }
+  })
+}
+
+// 封裝方法: 對文章取消點讚
+export function apiUnZan (artid) {
+  return myhttp({
+    url: `/app/v1_0/article/likings/${artid}`,
+    method: 'DELETE'
+  })
+}
+
+// 封装方法: 对文章点赞
+export function apiSearchZan (artid) {
+  return myhttp({
+    url: '/app/v1_0/article/likings',
+    method: 'POST',
+    data: {
+      target: artid
     }
   })
 }

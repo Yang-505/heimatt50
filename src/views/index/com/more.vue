@@ -20,7 +20,7 @@
 
 <script>
 // 导入操作文章的接口 apiDisList
-import { apiDisList, apiReport } from '../../../api/article.js'
+import { apiDisList, apiReport } from '../../../api/article'
 // 导入拉黑的方法
 import { apiDel } from '../../../api/user'
 export default {
@@ -50,7 +50,7 @@ export default {
     async dislike () {
       // 判断用户是否登录
       const token = this.$store.state.userInfo.token
-      console.log(token)
+      // console.log(this.artid)
       if (token) {
         // 1. 将当前文章数据从页面上删除
         // 1.1 将当前文章数据传回父组件
@@ -58,6 +58,7 @@ export default {
         // 2 将当前文章数据提交到服务器,将数据标记为不感兴趣
         const res = await apiDisList(this.artid)
         console.log(res)
+        this.$toast.success('操作成功!')
       } else {
         // 错误
         this.$toast('对不起,只有登录之后才能进行操作')
