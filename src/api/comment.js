@@ -26,3 +26,43 @@ export function apiAddComment ({ artid, content }) {
     }
   })
 }
+
+// 封装: 得到评论的回复 apiGetCommentReply
+// export function apiGetCommentReply ({ source, offset, limit }) {
+//   return myhttp({
+//     url: '/app/v1_0/comments',
+//     method: 'GET',
+//     params: {
+//       type: 'c',
+//       source,
+//       offset: offset,
+//       limit: limit
+//     }
+//   })
+// }
+
+export function apiGetCommentReply ({ commid, offset, limit }) {
+  return myhttp({
+    url: '/app/v1_0/comments',
+    method: 'GET',
+    params: {
+      type: 'c',
+      source: commid,
+      offset: offset,
+      limit: limit
+    }
+  })
+}
+
+// 封装方法: 添加评论的回复
+export function apiAddCommentReply ({ commid, content, artid }) {
+  return myhttp({
+    url: '/app/v1_0/comments',
+    method: 'POST',
+    data: {
+      target: commid,
+      content: content,
+      art_id: artid
+    }
+  })
+}

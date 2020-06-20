@@ -5,7 +5,7 @@ import axios from 'axios'
 import store from '../store/index'
 // 导入 json-bigint
 import JSONBig from 'json-bigint'
-// import { localSet } from './mylocal.js'
+import { localSet } from './mylocal.js'
 // 2 创建一个axios实例
 const http = axios.create({
   // 设置一个基地址
@@ -23,10 +23,10 @@ const http = axios.create({
   }]
 })
 // 3. 创建一个拦截器地址
-// const http1 = axios.create({
-//   // 设置一个基地址
-//   baseURL: 'http://ttapi.research.itcast.cn'
-// })
+const http1 = axios.create({
+  // 设置一个基地址
+  baseURL: 'http://ttapi.research.itcast.cn'
+})
 // 3. 给axios 添加拦截器
 // Add a request interceptor
 http.interceptors.request.use(function (config) {
@@ -47,7 +47,7 @@ http.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
   return response
-}, function (error) {
+}, async function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   console.log('-----------------响应拦截器---------------------')
   // console.log('状态码为:' + error.response.status)
@@ -59,26 +59,27 @@ http.interceptors.response.use(function (response) {
     // console.log(store.state)
     const refreshToken = store.state.userInfo.refresh_token // 得到 refresh_token
     console.log(refreshToken)
+    // console.log('我获取到了新的token')
     // 将 refresh_token 提交到服务器, 得到新的 token
-    // const tokenRes = await http1({
-    //   url: '/app/v1_0/authorizations',
-    //   method: 'PUT',
-    //   headers: {
-    //     Authorization: `Bearer ${refreshToken}`
-    //   }
-    // })
-    // const newToken = tokenRes.data.data.token // 得到新的 token
-    // console.log(newToken)
+    const tokenRes = await http1({
+      url: '/app/v1_0/authorizations',
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${refreshToken}`
+      }
+    })
+    const newToken = tokenRes.data.data.token // 得到新的 token
+    console.log(newToken)
     // // 得到新的 userInfo 对象
-    // const userInfo = {
-    //   token: newToken,
-    //   refresh_token: refreshToken
-    // }
+    const userInfo = {
+      token: newToken,
+      refresh_token: refreshToken
+    }
     // // 过期的 token 存在哪里, 1，store 2 localStorage 中
-    // store.commit('setUserInfo', userInfo) // 覆盖掉 store 中的过期 token
-    // localSet('userInfo', userInfo) // 覆盖掉 本地的 token
-    // // 使用 新的 token 完成未完成的请求
-    // return http(error.config)
+    store.commit('setUserInfo', userInfo) // 覆盖掉 store 中的过期 token
+    localSet('userInfo', userInfo) // 覆盖掉 本地的 token
+    // 使用 新的 token 完成未完成的请求
+    return http(error.config)
   }
   console.log('------------------响应拦截器----------------')
   return Promise.reject(error)

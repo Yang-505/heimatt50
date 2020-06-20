@@ -4,7 +4,7 @@
     <van-nav-bar :fixed="true" class="mytitle" title="主页" />
     <!-- 频道区域 -->
     <van-tabs v-model="active">
-      <van-tab v-for="(item, index) in channelList" :key="index" :title="item.name">
+      <van-tab  v-for="(item, index) in channelList" :key="index" :title="item.name">
        <!-- 下拉刷新 -->
        <van-pull-refresh v-model="item.isLoading" @refresh="onRefresh">
         <!-- 完成上拉加载更多 -->
@@ -14,7 +14,7 @@
               finished-text="没有更多了"
               @load="onLoad">
             {{ active }}
-            <van-cell class="mycell" v-for="(subitem, subindex) in item.articleList" :key="subindex" :title="subitem.title">
+            <van-cell @click="$router.push('/detail/' + subitem.art_id)" class="mycell" v-for="(subitem, subindex) in item.articleList" :key="subindex" :title="subitem.title">
               <!-- 标题 -->
               <template #title>
                 <h4>{{subitem.title}}</h4>

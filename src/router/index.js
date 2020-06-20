@@ -15,6 +15,8 @@ import Search from '../views/search/index.vue'
 import SearchResult from '../views/searchResult/searchResult.vue'
 // 导入详情
 import Detail from '../views/detail/index.vue'
+// 导入路由
+import Info from '../views/info/index.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -65,6 +67,10 @@ const routes = [
   {
     path: '/detail/:artid',
     component: Detail
+  },
+  {
+    path: '/info',
+    component: Info
   }
 ]
 

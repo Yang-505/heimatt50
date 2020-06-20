@@ -10,7 +10,7 @@
                     <div class="content">{{item.content}}</div>
                     <div class="other">
                         <span class="time">{{item.pubdate | timefilter}}</span>
-                        <span class="repeat">回复{{item.reply_count}}</span>
+                        <span  @click="openReply" class="repeat">回复{{item.reply_count}}</span>
                     </div>
                 </div>
                 <div class="like">
@@ -22,9 +22,20 @@
 </template>
 
 <script>
+// 导入 bus
+import bus from '../../../utils/bus'
 export default {
   // 接收父组件的item
-  props: ['item']
+  props: ['item', 'isShow'],
+  methods: {
+    openReply () {
+      // 将 index.vue 中 replyShow 改为 true
+      this.$parent.$parent.replyShow = true
+      // 将 item 从 comment 中传入到 reply 中
+      // 将 item 传入到 bus 中
+      bus.$emit('passitem', this.item)
+    }
+  }
 }
 </script>
 

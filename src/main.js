@@ -6,8 +6,9 @@ import App from './App.vue'
 import router from './router'
 // 导入了 store
 import store from './store'
-// 导入 vant  lazyload懒加载
+// 导入 vant  lazyload懒加载 & 图片预览
 import Vant, { Lazyload } from 'vant'
+
 // 导入 vant样式
 import 'vant/lib/index.css'
 // 导入图标

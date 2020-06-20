@@ -42,18 +42,22 @@
         <!-- 评论区域 -->
         <van-list v-model="loading" :finished="finished" @load="onLoad" finished-text="没有更多了">
             <!-- 使用 -->
-            <commet :item="item" v-for="(item, index) in commentList" :key="index" />
+            <comment  :item="item" v-for="(item, index) in commentList" :key="index" />
         </van-list>
         <!-- 评论 -->
-        <write @addComment="addComment" />
+        <write :isReply="false" @addComment="addComment" />
+        <!-- 回复组件 -->
+        <reply v-model="replyShow" />
     </div>
 </template>
 
 <script>
 // 导入评论子组件
-import commet from './com/commet'
+import comment from './com/comment'
 // 导入底部评论子组件
 import write from './com/write'
+// 导入子组件回复面板
+import reply from './com/reply'
 // 导入 关注 & 取关作者的方法
 import { apiFollow, apiUnFollow } from '../../api/user'
 // 导入操作文章的方法 & 文章點讚 & 取消文章點讚
@@ -63,8 +67,9 @@ import { apiGetComment } from '../../api/comment'
 export default {
   // 注册
   components: {
-    commet,
-    write
+    comment,
+    write,
+    reply
   },
   data () {
     return {
@@ -78,7 +83,9 @@ export default {
       endid: 0,
       // 页容量
       limit: 10,
-      commentList: []
+      commentList: [],
+      // 控制 reply 面板的显示和隐藏
+      replyShow: false
     }
   },
   methods: {
@@ -98,7 +105,7 @@ export default {
       console.log(res)
       this.offset = res.data.data.last_id
       this.endid = res.data.data.end_id
-      this.commentList = res.data.data.results
+      this.commentList = [...this.commentList, ...res.data.data.results]
       // 将 loading 设置为false
       this.loading = false
       // 判断数据是否加载完成
