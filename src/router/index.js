@@ -17,6 +17,8 @@ import SearchResult from '../views/searchResult/searchResult.vue'
 import Detail from '../views/detail/index.vue'
 // 导入路由
 import Info from '../views/info/index.vue'
+// 导入小智
+import Zhi from '../views/zhi/index.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -71,6 +73,10 @@ const routes = [
   {
     path: '/info',
     component: Info
+  },
+  {
+    path: '/zhi',
+    component: Zhi
   }
 ]
 

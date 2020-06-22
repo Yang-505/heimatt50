@@ -25,8 +25,16 @@
 // 导入 bus
 import bus from '../../../utils/bus'
 export default {
-  // 接收父组件的item
-  props: ['item', 'isShow'],
+  // 接收父组件的item ['item', 'isShow'],
+  props: {
+    item: {
+      type: Object,
+      required: true
+    },
+    isShow: {
+      type: Boolean
+    }
+  },
   methods: {
     openReply () {
       // 将 index.vue 中 replyShow 改为 true

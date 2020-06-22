@@ -29,7 +29,6 @@ export default {
     // 改变选中的图片
     changeImg () {
       // 关闭图片操作框
-      this.show = false
       // 打开一个浏览组件
       //   ImagePreview(['https://img.yzcdn.cn/vant/apple-1.jpg'])
       const file = this.$refs.myfile.files[0]
@@ -55,6 +54,7 @@ export default {
           onClose: this.closeProcess
         })
       })
+      this.show = false
     },
     // 关闭预览组件之后的逻辑
     closeProcess () {
@@ -65,9 +65,9 @@ export default {
         message: '是否将此图片设置为头像'
       }).then(async () => {
         // 得到图片
-        const path = this.$refs.myfile.files[0]
+        // const path = this.$refs.myfile.files[0]
         // 将图片提交到服务器中
-        const res = await apiUploadPhoto(path)
+        const res = await apiUploadPhoto(this.$refs.myfile.files[0])
         // 接收图片
         const newTcon = res.data.data.photo
         // 将图片传回到 info 页面中 info 属性项目
@@ -95,7 +95,6 @@ export default {
         }
         .box div {
             line-height: 46px;
-
         }
     }
 }

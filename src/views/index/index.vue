@@ -14,10 +14,10 @@
               finished-text="没有更多了"
               @load="onLoad">
             {{ active }}
-            <van-cell @click="$router.push('/detail/' + subitem.art_id)" class="mycell" v-for="(subitem, subindex) in item.articleList" :key="subindex" :title="subitem.title">
+            <van-cell class="mycell" v-for="(subitem, subindex) in item.articleList" :key="subindex" :title="subitem.title">
               <!-- 标题 -->
               <template #title>
-                <h4>{{subitem.title}}</h4>
+                <h4  @click="$router.push('/detail/' + subitem.art_id)">{{subitem.title}}</h4>
               <!-- 图片 -->
               <van-grid v-if="subitem.cover.type !==0" :border="false" :column-num="3">
                 <van-grid-item v-for="(imgitem,imgindex) in subitem.cover.images" :key="imgindex">
